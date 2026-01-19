@@ -1,0 +1,92 @@
+# Netlify Configuration for Vishnu Bhog Chakki Atta Website
+
+[build]
+  # Publish directory (root since it's a static site)
+  publish = "/"
+
+  # Command to run before build (not needed for static site)
+  # command = ""
+
+# Redirects and rewrites
+# For single-page application, redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Prevent clickjacking
+    X-Frame-Options = "DENY"
+
+    # Enable XSS protection
+    X-XSS-Protection = "1; mode=block"
+
+    # Prevent MIME type sniffing
+    X-Content-Type-Options = "nosniff"
+
+    # Referrer policy
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Permissions policy (optional)
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Cache Control Headers for Assets
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    # Cache images for 1 year (immutable)
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    # Cache CSS for 1 year (immutable)
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    # Cache JavaScript for 1 year (immutable)
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache Control for HTML (no cache, must revalidate)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Custom 404 page (optional - will use index.html for now)
+# [[redirects]]
+#   from = "/*"
+#   to = "/404.html"
+#   status = 404
+
+# Environment variables (if needed in future)
+# [build.environment]
+#   NODE_VERSION = "18"
+
+# Context-specific build settings (optional)
+[context.production]
+  # Production-specific settings
+  [context.production.environment]
+    NODE_ENV = "production"
+
+[context.deploy-preview]
+  # Deploy preview specific settings
+  [context.deploy-preview.environment]
+    NODE_ENV = "development"
+
+[context.branch-deploy]
+  # Branch deploy specific settings
+  [context.branch-deploy.environment]
+    NODE_ENV = "staging"
+
+# Plugin configuration (optional)
+# [[plugins]]
+#   package = "@netlify/plugin-lighthouse"
+#
+#   [plugins.inputs]
+#     output_path = "reports/lighthouse"
